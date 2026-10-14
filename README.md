@@ -123,6 +123,23 @@ rm -f inline-pdf-display.xpi
 zip -r inline-pdf-display.xpi manifest.json background.html background.js content.js content.css options.html options.js pdfjs icons LICENSE -x '*.map'
 ```
 
+## Releasing (automated)
+
+A GitHub Actions workflow (`.github/workflows/release.yml`) builds the `.xpi`
+and publishes it as a release asset whenever a version tag is pushed. To cut a
+release:
+
+```bash
+# 1. bump "version" in manifest.json and update CHANGELOG.md, commit
+# 2. tag and push (the tag must match manifest.json's version)
+git tag v1.0.1
+git push origin v1.0.1
+```
+
+The workflow validates the sources, checks that the tag matches the manifest
+version, builds the `.xpi`, and creates the GitHub release with that asset
+attached. No local build needed.
+
 ## Updating the screenshots
 
 The files in `screenshots/` are labeled placeholders. To replace them with real

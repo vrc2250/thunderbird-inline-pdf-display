@@ -1,0 +1,57 @@
+name: Release
+
+# Build the .xpi and publish it as a release asset whenever a version tag is
+# pushed, e.g.  git tag v1.0.1 && git push origin v1.0.1
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Validate sources
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('manifest.json'))"
+          node --check content.js
+          node --check options.js
+          node --input-type=module --check < background.js
+
+      - name: Verify tag matches manifest version
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          MANIFEST="$(node -p "require('./manifest.json').version")"
+          echo "tag=$TAG  manifest=$MANIFEST"
+          if [ "$TAG" != "$MANIFEST" ]; then
+            echo "::error::Tag ($TAG) does not match manifest version ($MANIFEST). Bump manifest.json first."
+            exit 1
+          fi
+
+      - name: Build XPI
+        run: |
+          rm -f inline-pdf-display.xpi
+          zip -r -q inline-pdf-display.xpi \
+            manifest.json background.html background.js \
+            content.js content.css options.html options.js \
+            pdfjs icons LICENSE -x '*.map'
+          unzip -l inline-pdf-display.xpi
+
+      - name: Publish release with asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            # Release already exists (e.g. created manually) — just attach/refresh the asset.
+            gh release upload "$GITHUB_REF_NAME" inline-pdf-display.xpi --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" inline-pdf-display.xpi \
+              --title "Inline PDF Display $GITHUB_REF_NAME" \
+              --generate-notes
+          fi
