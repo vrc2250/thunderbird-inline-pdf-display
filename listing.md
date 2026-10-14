@@ -49,7 +49,7 @@ Mark LeBlanc
 vrc2250@gmail.com
 
 ## Homepage / Support site (optional)
-https://github.com/REPLACE_WITH_REPO
+https://github.com/vrc2250/thunderbird-inline-pdf-display
 
 ## License
 MIT

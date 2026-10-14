@@ -4,6 +4,7 @@
   "description": "View PDF attachments right inside the email body — no extra tab, no double-click. Handles password-protected PDFs.",
   "version": "1.0.0",
   "author": "Mark LeBlanc",
+  "homepage_url": "https://github.com/vrc2250/thunderbird-inline-pdf-display",
   "browser_specific_settings": {
     "gecko": {
       "id": "inline-pdf-display@local.mark",
