@@ -1,7 +1,18 @@
 # Inline PDF Display — Thunderbird extension
 
+[![Install (.xpi)](https://img.shields.io/badge/install-.xpi-C0392B?logo=thunderbird&logoColor=white)](https://github.com/vrc2250/thunderbird-inline-pdf-display/releases/latest/download/inline-pdf-display.xpi)
+[![Latest release](https://img.shields.io/github/v/release/vrc2250/thunderbird-inline-pdf-display)](https://github.com/vrc2250/thunderbird-inline-pdf-display/releases/latest)
+[![License: MIT](https://img.shields.io/github/license/vrc2250/thunderbird-inline-pdf-display)](LICENSE)
+![Thunderbird 128+](https://img.shields.io/badge/Thunderbird-128%2B-informational?logo=thunderbird&logoColor=white)
+
 Renders PDF attachments directly inside the body of an email, so you no longer
 have to double-click the attachment to open it in a separate viewer tab.
+
+> **Install:** click the **install `.xpi`** badge above to download the latest
+> release, then in Thunderbird go to **☰ → Add-ons and Themes → gear ⚙ →
+> Install Add-on From File…** and pick the downloaded file. (See
+> [Install](#install-permanent-from-the-xpi) for the unsigned-add-on setting and
+> the required "Run on sites with restrictions" permission.)
 
 Built and tested against **Thunderbird 128 ESR and later**.
 
