@@ -1,0 +1,52 @@
+name: CI
+
+# Validate the extension sources on every push to main and on pull requests,
+# so problems are caught before a release tag is cut.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Validate manifest and scripts
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('manifest.json'))"
+          node --check content.js
+          node --check options.js
+          node --input-type=module --check < background.js
+
+      - name: Check referenced files exist
+        run: |
+          set -e
+          for f in \
+            background.html background.js content.js content.css \
+            options.html options.js pdfjs/pdf.mjs pdfjs/pdf.worker.mjs \
+            icons/icon-48.png icons/icon-96.png LICENSE; do
+            test -f "$f" || { echo "::error::Missing referenced file: $f"; exit 1; }
+          done
+          echo "All referenced files present."
+
+      - name: Build XPI (smoke test)
+        run: |
+          zip -r -q inline-pdf-display.xpi \
+            manifest.json background.html background.js \
+            content.js content.css options.html options.js \
+            pdfjs icons LICENSE -x '*.map'
+          unzip -l inline-pdf-display.xpi
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: inline-pdf-display-xpi
+          path: inline-pdf-display.xpi
+          if-no-files-found: error
