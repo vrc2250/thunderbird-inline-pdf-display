@@ -3,7 +3,16 @@
 Renders PDF attachments directly inside the body of an email, so you no longer
 have to double-click the attachment to open it in a separate viewer tab.
 
-Built and tested against **Thunderbird 128 ESR and later** (you are on 153 ESR).
+Built and tested against **Thunderbird 128 ESR and later**.
+
+## Screenshots
+
+> The images below are **placeholders**. To replace them, see
+> [Updating the screenshots](#updating-the-screenshots).
+
+| Inline rendering | Password prompt | Options |
+|:---:|:---:|:---:|
+| ![PDF rendered inline in the message body](screenshots/inline-pdf.png) | ![Inline password prompt](screenshots/password-prompt.png) | ![Placement options](screenshots/options.png) |
 
 ## What it does
 
@@ -63,7 +72,7 @@ to iterate.
 2. Click the **gear ⚙ icon** → **Debug Add-ons**.
 3. Click **Load Temporary Add-on…**
 4. Select this folder's `manifest.json`
-   (`/home/mark/Development/ThunderBirdPDFDisplay/manifest.json`).
+   (the `manifest.json` in your checkout of this repo).
 5. Open an email with a PDF attachment — it renders in the body.
 
 ## Install (permanent, from the .xpi)
@@ -98,10 +107,28 @@ toggle above is the recommended, narrower option.)
 ## Rebuilding the .xpi after edits
 
 ```bash
-cd /home/mark/Development/ThunderBirdPDFDisplay
+# from the repo root
 rm -f inline-pdf-display.xpi
 zip -r inline-pdf-display.xpi manifest.json background.html background.js content.js content.css options.html options.js pdfjs icons LICENSE -x '*.map'
 ```
+
+## Updating the screenshots
+
+The files in `screenshots/` are labeled placeholders. To replace them with real
+captures:
+
+1. In Thunderbird, open an email that has a PDF attachment so it renders inline.
+2. Capture the areas and save them (overwriting the placeholders), keeping the
+   same filenames so the README picks them up automatically:
+   - `screenshots/inline-pdf.png` — a PDF rendered in the message body
+   - `screenshots/password-prompt.png` — the inline 🔒 password prompt
+   - `screenshots/options.png` — the Options page (Add-ons → Inline PDF Display
+     → Manage → Options)
+3. Tip: use your OS screenshot tool (on GNOME, `gnome-screenshot -a` for an area
+     grab). Crop out any private email content before committing.
+4. Commit and push: `git add screenshots && git commit -m "Add screenshots" && git push`
+
+These images double as the screenshots for the addons.thunderbird.net listing.
 
 ## Troubleshooting
 
