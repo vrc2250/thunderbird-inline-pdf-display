@@ -1,0 +1,4 @@
+PDF.js (pdfjs-dist) 6.4.299
+Source: https://github.com/mozilla/pdf.js  (npm: pdfjs-dist@6.4.299)
+Files: legacy/build/pdf.mjs and legacy/build/pdf.worker.mjs — the official,
+UNMODIFIED non-minified legacy ESM build. License: Apache-2.0 (see LICENSE).

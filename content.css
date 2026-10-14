@@ -1,0 +1,71 @@
+#inline-pdf-display-root {
+  margin: 0 0 16px 0;
+  font-family: system-ui, sans-serif;
+}
+
+.ipdf-panel {
+  border: 1px solid #c7c7c7;
+  border-radius: 6px;
+  margin: 0 0 12px 0;
+  background: #f4f4f4;
+  overflow: hidden;
+}
+.ipdf-panel:last-child { margin-bottom: 0; }
+
+.ipdf-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  background: #e4e4e4;
+  border-bottom: 1px solid #c7c7c7;
+  font-size: 13px;
+}
+.ipdf-title {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ipdf-meta { color: #666; margin-left: 10px; flex-shrink: 0; }
+
+.ipdf-body { padding: 10px; text-align: center; background: #d9d9d9; }
+
+.ipdf-page {
+  display: block;
+  margin: 0 auto 10px auto;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  background: #fff;
+  max-width: 100%;
+  height: auto;
+}
+.ipdf-page:last-child { margin-bottom: 0; }
+
+.ipdf-notice {
+  padding: 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  display: inline-block;
+  text-align: left;
+}
+.ipdf-info { color: #333; }
+.ipdf-error { color: #a00; background: #fdeaea; }
+.ipdf-lock { color: #333; background: #fff6da; border: 1px solid #e0c86a; }
+
+.ipdf-pass-row { margin-top: 8px; display: flex; gap: 6px; }
+.ipdf-pass-input {
+  padding: 4px 8px; border: 1px solid #aaa; border-radius: 4px; font-size: 13px;
+}
+.ipdf-pass-btn {
+  padding: 4px 12px; border: 1px solid #888; border-radius: 4px;
+  background: #fff; cursor: pointer; font-size: 13px;
+}
+.ipdf-pass-btn:hover { background: #eee; }
+
+@media (prefers-color-scheme: dark) {
+  .ipdf-panel { border-color: #444; background: #2a2a2a; }
+  .ipdf-header { background: #333; border-bottom-color: #444; color: #ddd; }
+  .ipdf-meta { color: #aaa; }
+  .ipdf-body { background: #1e1e1e; }
+  .ipdf-info { color: #ddd; }
+}

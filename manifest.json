@@ -1,0 +1,29 @@
+{
+  "manifest_version": 2,
+  "name": "Inline PDF Display",
+  "description": "View PDF attachments right inside the email body — no extra tab, no double-click. Handles password-protected PDFs.",
+  "version": "1.0.0",
+  "author": "Mark LeBlanc",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "inline-pdf-display@local.mark",
+      "strict_min_version": "128.0"
+    }
+  },
+  "permissions": [
+    "messagesRead",
+    "messagesModify",
+    "storage"
+  ],
+  "background": {
+    "page": "background.html"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  },
+  "icons": {
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png"
+  }
+}

@@ -1,0 +1,6 @@
+# Build artifact (attach to GitHub Releases instead of committing)
+*.xpi
+
+# OS / editor cruft
+.DS_Store
+*.swp

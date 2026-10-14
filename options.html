@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        font-size: 14px;
+        margin: 16px;
+        max-width: 520px;
+      }
+      h1 { font-size: 16px; margin: 0 0 4px 0; }
+      p.desc { color: #666; margin: 0 0 14px 0; }
+      fieldset { border: 1px solid #ccc; border-radius: 6px; padding: 10px 14px; }
+      legend { font-weight: 600; padding: 0 6px; }
+      label { display: flex; align-items: center; gap: 8px; padding: 6px 0; cursor: pointer; }
+      #saved { color: #2a8a2a; margin-left: 8px; opacity: 0; transition: opacity 0.2s; }
+      #saved.show { opacity: 1; }
+      @media (prefers-color-scheme: dark) {
+        body { color: #ddd; }
+        p.desc { color: #aaa; }
+        fieldset { border-color: #555; }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Inline PDF Display</h1>
+    <p class="desc">Choose where rendered PDF attachments appear in the message.</p>
+    <fieldset>
+      <legend>PDF placement<span id="saved">✓ saved</span></legend>
+      <label>
+        <input type="radio" name="placement" value="before" />
+        Before the email text (top of the message)
+      </label>
+      <label>
+        <input type="radio" name="placement" value="after" />
+        After the email text (bottom of the message)
+      </label>
+    </fieldset>
+    <script src="options.js"></script>
+  </body>
+</html>
