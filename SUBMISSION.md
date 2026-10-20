@@ -70,9 +70,31 @@ from the content-script sandbox does not paint. What does work is `<img>` with a
 renders each page to a PNG, and the content script injects those as
 `<img src="data:image/png;base64,…">`. See README.md for the full rationale.
 
+## Automated linter warnings (all benign, all in PDF.js)
+
+The addons-linter emits warnings that **all originate in the unmodified PDF.js
+files**, not in add-on code:
+
+- **"Function constructor is eval"** (`pdf.mjs`, `pdf.worker.mjs`) — a guarded
+  `globalThis` polyfill fallback (`Function('return this')()`), never reached in
+  a modern engine.
+- **`activeXDocument.write` / `iframeDocument.write`** — legacy core-js
+  null-prototype-object shim for old Internet Explorer; dead code in Thunderbird.
+- **"Unsafe call to import"** — PDF.js dynamically importing its own worker
+  module (`webpackIgnore`), not remote code.
+
+Note: `messagesRead` / `messagesModify` flagged as "invalid permissions" means
+the **Firefox** addons-linter ran — those are valid Thunderbird MailExtension
+permissions. Submit on addons.thunderbird.net, whose linter recognizes them.
+
 ## Known limitations / roadmap
 
 - Pages are rendered eagerly, capped at 50 pages and 75 MB per PDF (guardrails).
   Lazy, render-on-scroll is planned.
 - Manifest V2. A Manifest V3 migration is planned as Thunderbird's MV3 support
   matures.
+- **Not compatible with the Thunderbird Conversations add-on.** Conversations
+  renders messages in its own iframes rather than the classic reader, and
+  `messageDisplayScripts` is not injected there, so the inline panel does not
+  appear while a Conversations thread is shown. This is an upstream limitation
+  (Conversations issue #1609) with no add-on-side workaround.
