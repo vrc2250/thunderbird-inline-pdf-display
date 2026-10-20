@@ -158,6 +158,19 @@ captures:
 
 These images double as the screenshots for the addons.thunderbird.net listing.
 
+## Known limitations
+
+- **Thunderbird Conversations add-on.** When the
+  [Thunderbird Conversations](https://github.com/thunderbird-conversations/thunderbird-conversations)
+  extension is displaying a thread, the inline PDF panel does **not** appear.
+  Conversations renders each message in its own iframe inside a custom
+  conversation view, and Thunderbird's `messageDisplayScripts` API only injects
+  into the classic single-message reader — so this add-on's content script never
+  runs there. This is an upstream limitation with no add-on-side workaround
+  (see Conversations issue
+  [#1609](https://github.com/thunderbird-conversations/thunderbird-conversations/issues/1609)).
+  Open the message in Thunderbird's standard reader to see the inline PDF.
+
 ## Troubleshooting
 
 - Nothing shows up: open **Debug Add-ons → Inspect** on this extension to see the
