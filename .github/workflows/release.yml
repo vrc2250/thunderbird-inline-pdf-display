@@ -40,7 +40,7 @@ jobs:
           zip -r -q inline-pdf-display.xpi \
             manifest.json background.html background.js \
             content.js content.css options.html options.js \
-            pdfjs icons LICENSE -x '*.map'
+            pdfjs icons LICENSE -x '*.map' 'pdfjs/VERSION.txt'
           unzip -l inline-pdf-display.xpi
 
       - name: Publish release with asset

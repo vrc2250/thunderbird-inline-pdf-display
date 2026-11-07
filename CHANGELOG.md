@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.1
+- Address addons.thunderbird.net review feedback:
+  - Exclude `pdfjs/VERSION.txt` from the packaged `.xpi` (kept in-repo for provenance).
+  - Remove the synchronous `XMLHttpRequest` in the bundled PDF.js worker. It was only used by optional ICC color-management that this add-on never enables; ICC now falls back to DeviceCMYK as before.
+
 ## 1.1.0
 - Add a **Save** button to each inline PDF panel to save the attachment via a save dialog (requires the new `downloads` permission).
 
