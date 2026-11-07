@@ -132,6 +132,46 @@ messenger.runtime.onMessage.addListener((msg, sender) => {
     })();
   }
 
+  if (msg.type === "savePdf") {
+    return (async () => {
+      try {
+        const messageId = await getDisplayedMessageId(sender);
+        if (messageId === null) return { ok: false, error: "No message" };
+        // getAttachmentFile returns a File (a Blob), so we can hand a blob: URL
+        // straight to the downloads API. saveAs:true opens the save dialog.
+        const file = await messenger.messages.getAttachmentFile(messageId, msg.partName);
+        const url = URL.createObjectURL(file);
+        let downloadId;
+        try {
+          downloadId = await messenger.downloads.download({
+            url,
+            filename: msg.name || "document.pdf",
+            saveAs: true,
+          });
+        } catch (e) {
+          URL.revokeObjectURL(url);
+          const m = String(e && e.message ? e.message : e);
+          // Dismissing the save dialog rejects; that's not an error.
+          if (/cancel/i.test(m)) return { ok: true, canceled: true };
+          return { ok: false, error: m };
+        }
+        // Release the blob URL once the download reaches a terminal state.
+        const cleanup = (delta) => {
+          if (delta.id !== downloadId || !delta.state) return;
+          const s = delta.state.current;
+          if (s === "complete" || s === "interrupted") {
+            URL.revokeObjectURL(url);
+            messenger.downloads.onChanged.removeListener(cleanup);
+          }
+        };
+        messenger.downloads.onChanged.addListener(cleanup);
+        return { ok: true };
+      } catch (e) {
+        return { ok: false, error: String(e && e.message ? e.message : e) };
+      }
+    })();
+  }
+
   if (msg.type === "renderPdf") {
     return (async () => {
       try {

@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1.0
+- Add a **Save** button to each inline PDF panel to save the attachment via a save dialog (requires the new `downloads` permission).
+
 ## 1.0.0
 - First release of Inline PDF Display.
 - Renders PDF attachments inline in the message body — no separate tab, no double-clicking.
