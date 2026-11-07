@@ -27,7 +27,15 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.ipdf-meta { color: #666; margin-left: 10px; flex-shrink: 0; }
+.ipdf-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.ipdf-meta { color: #666; }
+
+.ipdf-save-btn {
+  padding: 2px 8px; border: 1px solid #888; border-radius: 4px;
+  background: #fff; cursor: pointer; font-size: 12px; white-space: nowrap;
+}
+.ipdf-save-btn:hover { background: #eee; }
+.ipdf-save-btn:disabled { opacity: 0.6; cursor: default; }
 
 .ipdf-body { padding: 10px; text-align: center; background: #d9d9d9; }
 
@@ -68,4 +76,6 @@
   .ipdf-meta { color: #aaa; }
   .ipdf-body { background: #1e1e1e; }
   .ipdf-info { color: #ddd; }
+  .ipdf-save-btn { background: #333; color: #ddd; border-color: #555; }
+  .ipdf-save-btn:hover { background: #444; }
 }

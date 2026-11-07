@@ -104,12 +104,52 @@
     input.focus();
   }
 
+  // Ask the background page to save the attachment via the downloads API.
+  // The message pane is CSP-sandboxed, so the download can't happen here.
+  async function savePdf(att, btn) {
+    const original = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "Saving…";
+    let resp;
+    try {
+      resp = await messenger.runtime.sendMessage({
+        type: "savePdf",
+        partName: att.partName,
+        name: att.name,
+      });
+    } catch (e) {
+      resp = { ok: false, error: e && e.message ? e.message : String(e) };
+    }
+    btn.disabled = false;
+    if (resp && resp.ok) {
+      if (resp.canceled) {
+        btn.textContent = original;
+      } else {
+        btn.textContent = "✓ Saved";
+        setTimeout(() => { btn.textContent = original; }, 2000);
+      }
+    } else {
+      console.error("[InlinePDF] save failed:", resp && resp.error);
+      btn.textContent = "Save failed";
+      setTimeout(() => { btn.textContent = original; }, 2000);
+    }
+  }
+
   function buildPanel(att) {
     const panel = el("div", { className: "ipdf-panel" });
+    const saveBtn = el("button", {
+      className: "ipdf-save-btn",
+      title: "Save PDF…",
+      textContent: "💾 Save",
+    });
+    saveBtn.addEventListener("click", () => savePdf(att, saveBtn));
     panel.append(
       el("div", { className: "ipdf-header" }, [
         el("span", { className: "ipdf-title", textContent: "📄 " + att.name }),
-        el("span", { className: "ipdf-meta", textContent: formatBytes(att.size) }),
+        el("span", { className: "ipdf-right" }, [
+          el("span", { className: "ipdf-meta", textContent: formatBytes(att.size) }),
+          saveBtn,
+        ]),
       ])
     );
     const body = el("div", { className: "ipdf-body" });
