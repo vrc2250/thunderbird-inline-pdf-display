@@ -8200,11 +8200,14 @@ class LabCS extends ColorSpace {
 
 
 function fetchSync(url) {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", url, false);
-  xhr.responseType = "arraybuffer";
-  xhr.send(null);
-  return xhr.response;
+  // LOCAL PATCH (Inline PDF Display, for addons.thunderbird.net): upstream pdf.js
+  // loads the optional ICC color-management WASM/profile via a *synchronous*
+  // XMLHttpRequest, which ATN review rejects. This add-on never passes the
+  // `wasmUrl`/`iccUrl` getDocument options, so these resources are never
+  // requested and this function is unreachable in practice. We replace the sync
+  // XHR with a throw; the only callers (QCMS.isUsable / CmykICCBasedCS) catch it
+  // and fall back to DeviceCMYK. See pdfjs/VERSION.txt.
+  throw new Error("Inline PDF Display: synchronous resource fetch is disabled.");
 }
 class IccColorSpace extends ColorSpace {
   #transformer;

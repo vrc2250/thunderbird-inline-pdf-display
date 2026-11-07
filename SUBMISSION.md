@@ -3,7 +3,7 @@
 Notes for addons.thunderbird.net reviewers.
 
 - **Add-on:** Inline PDF Display
-- **Version:** 1.0.0
+- **Version:** 1.1.1
 - **Extension ID:** `inline-pdf-display@local.mark`
 - **Manifest:** v2 MailExtension
 - **Minimum Thunderbird:** 128.0
@@ -12,8 +12,9 @@ Notes for addons.thunderbird.net reviewers.
 
 Renders PDF **attachments** of the currently displayed message as images inside
 the message body, so the user doesn't have to open each PDF in a separate tab.
-Password-protected PDFs get an inline password prompt. A single option controls
-whether the rendered PDF appears above or below the message text.
+Password-protected PDFs get an inline password prompt. Each inline PDF has a
+**Save** button that saves the attachment to disk via a save dialog. A single
+option controls whether the rendered PDF appears above or below the message text.
 
 ## No remote code / no network / no data collection
 
@@ -23,7 +24,8 @@ whether the rendered PDF appears above or below the message text.
   from the local message store and rendered locally.
 - **No telemetry / analytics / tracking.**
 - **No user data leaves the machine.** The only stored data is one preference
-  (`placement` = `"before"`/`"after"`) in `storage.local`.
+  (`placement` = `"before"`/`"after"`) in `storage.local`. The Save button writes
+  the user's own attachment to a location they choose via the download dialog.
 
 ## Permissions — why each is needed
 
@@ -32,13 +34,20 @@ whether the rendered PDF appears above or below the message text.
 | `messagesRead` | List the displayed message's attachments and read the PDF bytes (`messages.listAttachments`, `messages.getAttachmentFile`) and resolve the displayed message (`messageDisplay.getDisplayedMessage`). |
 | `messagesModify` | Required by `messageDisplayScripts.register`, used to inject the content script that places the rendered pages into the message body. |
 | `storage` | Persist the single "placement" preference. |
+| `downloads` | Save an inline PDF to disk when the user clicks the panel's Save button (`downloads.download` with `saveAs: true`). |
 
 ## Third-party code: PDF.js (bundled)
 
 - **Library:** Mozilla PDF.js (`pdfjs-dist`) **6.4.299**, Apache-2.0.
 - **Files:** `pdfjs/pdf.mjs`, `pdfjs/pdf.worker.mjs` — the official,
-  **unmodified, non-minified** `legacy` ESM build. License at `pdfjs/LICENSE`,
-  provenance at `pdfjs/VERSION.txt`.
+  **non-minified** `legacy` ESM build, with a single local patch to the worker
+  (see below). License at `pdfjs/LICENSE`, provenance at `pdfjs/VERSION.txt`.
+- **Single local patch (`pdf.worker.mjs`):** the `fetchSync()` helper's
+  synchronous `XMLHttpRequest` was replaced with a `throw`. It is only used by
+  optional ICC color-management (gated behind the `wasmUrl`/`iccUrl` getDocument
+  options, which this add-on never sets), so it is unreachable here; its two
+  callers catch the error and fall back to DeviceCMYK. This removes the only
+  synchronous XHR from the build.
 - **Reproduce the bundled files exactly:**
   ```bash
   npm pack pdfjs-dist@6.4.299
@@ -46,6 +55,7 @@ whether the rendered PDF appears above or below the message text.
   cp package/legacy/build/pdf.mjs        pdfjs/pdf.mjs
   cp package/legacy/build/pdf.worker.mjs pdfjs/pdf.worker.mjs
   cp package/LICENSE                     pdfjs/LICENSE
+  # then re-apply the fetchSync patch described above (see pdfjs/VERSION.txt)
   ```
 - Version chosen to include the fix for CVE-2024-4367 (PDF.js < 4.2.67).
 
@@ -57,8 +67,11 @@ The add-on is plain HTML/CSS/JS; the `.xpi` is just a zip of the source files:
 zip -r inline-pdf-display.xpi \
   manifest.json background.html background.js \
   content.js content.css options.html options.js \
-  pdfjs icons LICENSE -x '*.map'
+  pdfjs icons LICENSE -x '*.map' 'pdfjs/VERSION.txt'
 ```
+
+(`pdfjs/VERSION.txt` is a provenance note for maintainers and is deliberately
+excluded from the `.xpi`.)
 
 ## Architecture note (why PDF.js runs in the background page)
 

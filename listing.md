@@ -23,6 +23,8 @@ email, so you see them the moment you open the message.
 
 Features
 • Automatic — PDF attachments render inline as soon as you view the message.
+• Save button — each inline PDF has a Save button in its header that saves the
+  attachment to disk via a normal save dialog.
 • Password-protected PDFs — if a PDF needs a password, you get a prompt right in
   the message; enter it and the pages appear. (Files with only owner/permissions
   restrictions open with no prompt.)
@@ -31,6 +33,19 @@ Features
 • Private and offline — everything is rendered locally with Mozilla's PDF.js.
   The add-on makes no network connections, collects no data, and sends nothing
   anywhere.
+
+How to use
+1. Open any email that has a PDF attachment. There is nothing to click — the PDF
+   renders automatically inside the message, as a bordered panel. By default the
+   panel appears below the message text.
+2. Each panel has a header showing the file name and size, with a Save button on
+   the right. Click Save to write the PDF to disk (a save dialog lets you choose
+   the location).
+3. If a PDF is password-protected, the panel shows a password field instead of
+   the pages — type the password and click Unlock to reveal them.
+4. To move the panels above the message text instead of below, go to Add-ons and
+   Themes → Inline PDF Display → three-dot menu → Options and choose "Before the
+   email text".
 
 After installing
 Thunderbird gates message-viewing add-ons behind a permission. If PDFs don't

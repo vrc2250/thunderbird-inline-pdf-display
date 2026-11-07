@@ -1,4 +1,13 @@
 PDF.js (pdfjs-dist) 6.4.299
 Source: https://github.com/mozilla/pdf.js  (npm: pdfjs-dist@6.4.299)
-Files: legacy/build/pdf.mjs and legacy/build/pdf.worker.mjs — the official,
-UNMODIFIED non-minified legacy ESM build. License: Apache-2.0 (see LICENSE).
+Files: legacy/build/pdf.mjs and legacy/build/pdf.worker.mjs — the official
+non-minified legacy ESM build. License: Apache-2.0 (see LICENSE).
+
+Local patch (one, in pdf.worker.mjs):
+- `fetchSync()` had its synchronous XMLHttpRequest replaced with a `throw`,
+  to satisfy addons.thunderbird.net review. It is only used by optional ICC
+  color-management (gated behind the `wasmUrl`/`iccUrl` getDocument options,
+  which this add-on never sets), so it is unreachable here; callers catch the
+  error and fall back to DeviceCMYK. Re-apply this patch when updating PDF.js.
+
+This file is kept for provenance and is excluded from the packaged .xpi.
